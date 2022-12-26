@@ -1,3 +1,26 @@
-const ProductList = () => <div>상품목록</div>
+import { useQuery } from "react-query";
+import ProductItem from "../../components/products/productItem";
+import { fetcher, QueryKeys } from "../../queryClient";
+import { Product } from "../../types";
 
-export default ProductList
+const ProductList = () => {
+  const { data } = useQuery<Product[]>(QueryKeys.PRODUCTS, () =>
+    fetcher({
+      method: "GET",
+      path: "/products",
+    })
+  );
+
+  return (
+    <div>
+      <h2>상품목록</h2>
+      <ul className="products">
+        {data?.map((product) => (
+          <ProductItem {...product} key={product.id} />
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default ProductList;
